@@ -56,7 +56,9 @@ export default function SearchBar(props) {
     e.preventDefault();
     let input = e.target.value;
     setInputValue(input);
-    setSchool({ name: input });
+    if (searchType === "student") {
+      setSchool({ name: input });
+    }
   };
 
   // handle Search
