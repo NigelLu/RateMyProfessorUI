@@ -70,7 +70,7 @@ export default function Header() {
 
       <Col span={18} style={{ minWidth: "900px" }}>
         <ProfSchoolDropDown items={items} searchType={searchType} />
-        <SearchBar style={searchBarStyle} hasPrefix={false} searchType={searchType} />
+        <SearchBar style={searchBarStyle} hasPrefix={false} searchType={searchType} current_school={school} />
         {searchType === "professor" ? (
           <span style={{ color: "white", marginLeft: "20px", fontSize: "18px" }}>
             at &nbsp;
@@ -81,7 +81,7 @@ export default function Header() {
                 searchType={"school"}
                 setSchool={setSchool}
                 setSearchType={setSearchType}
-                // handle the header school search auto hidden 
+                // handle the header school search auto hidden
                 schoolSearch={schoolSearch}
                 setSchoolSearch={setSchoolSearch}
               />

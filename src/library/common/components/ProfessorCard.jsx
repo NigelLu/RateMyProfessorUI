@@ -6,6 +6,7 @@ import { Col, Row } from "antd";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import { useNavigate } from "react-router";
 
+
 const divStyle = {
   textAlign: "center",
   borderRadius: "15px",
