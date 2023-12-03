@@ -54,7 +54,7 @@ const coverStyle = {
 };
 
 export default function Home() {
-  const [school, setSchool] = useState({ name: "New York University" });
+  const [school, setSchool] = useState({ name: "New York University", id: 1 });
   const [searchType, setSearchType] = useState("professor");
 
   const handleSearchType = () => {
@@ -92,6 +92,7 @@ export default function Home() {
             )}
 
             <SearchBar
+              current_school={school}
               style={searchBarStyle}
               hasPrefix={true}
               searchType={searchType}

@@ -16,19 +16,19 @@ export default function SearchBar(props) {
   const setSearchType = props.setSearchType;
   const schoolSearch = props.schoolSearch;
   const setSchoolSearch = props.setSchoolSearch;
+  const current_school = props.current_school
   const navigate = useNavigate();
-
   // Sample options for autocompletion
   const options = [
-    { value: "Option 1" },
-    { value: "Option 2" },
-    { value: "Option 3" },
-    { value: "Option 4" },
-    { value: "Option 5" },
-    { value: "Option 6" },
-    { value: "Option 7" },
-    { value: "Option 8" },
-    { value: "Option 9" },
+    { name: "Option 1", id: 2 },
+    { name: "Option 2", id: 3 },
+    { name: "Option 3", id: 4 },
+    { name: "Option 4", id: 5 },
+    { name: "Option 5", id: 6 },
+    { name: "Option 6", id: 7 },
+    { name: "Option 7", id: 8 },
+    { name: "Option 8", id: 9 },
+    { name: "Option 9", id: 10 },
     // Add more options as needed
   ];
 
@@ -37,6 +37,7 @@ export default function SearchBar(props) {
 
   // Callback when an option is selected
   const handleSelect = (value) => {
+    console.log(value)
     if (searchType === "school") {
       setSchool({ name: value });
       setSearchType("professor");
@@ -66,7 +67,7 @@ export default function SearchBar(props) {
     if (searchType === "professor" && e.key === "Enter" && inputValue.trim() !== "") {
       const professorName = encodeURIComponent(inputValue.trim());
 
-      const url = `/search/professors/?professorName=${professorName}`;
+      const url = `/search/professors/${current_school.id}/${professorName}`;
 
       navigate(url); // Use navigate to change the route
     }
@@ -80,7 +81,7 @@ export default function SearchBar(props) {
         maxHeight: "auto",
         overflowY: "scroll",
       }}
-      options={options.map((option) => ({ value: option.value }))}
+      options={options.map((option) => ({ value: option.name, id: option.id }))}
       onSelect={handleSelect}
       value={props.school ? props.school.name : inputValue}
       filterOption={(inputValue, option) => option.value.toLowerCase().indexOf(inputValue.toLowerCase()) !== -1}>
