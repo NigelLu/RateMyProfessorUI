@@ -21,9 +21,6 @@ const ButtonStyle = {
 };
 
 export default function ProfessorListPage() {
-  console.log(window.location);
-  const numProfessors = 2;
-  const nameContaining = "l";
   const school = { name: "New York University", id: 1 };
   const Professors = [
     {
@@ -78,13 +75,16 @@ export default function ProfessorListPage() {
       ],
     },
   ];
+  const numProfessors = Professors.length;
+  const path = window.location.pathname.split("/");
+
   return (
     <div>
       <SelfHeader />
       <div style={{ marginLeft: "50px", marginTop: "50px", minWidth: "600px" }}>
         <p style={{ fontSize: "22px" }}>
           {numProfessors} professors with
-          <span style={{ fontWeight: "bold" }}>"{nameContaining}"</span>
+          <span style={{ fontWeight: "bold" }}>"{path[path.length - 1]}"</span>
           &nbsp;in their names at&nbsp;
           <span style={{ fontWeight: "bold" }}>{school.name}</span>
         </p>

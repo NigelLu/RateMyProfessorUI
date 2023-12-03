@@ -29,7 +29,7 @@ const searchBarStyle = {
 };
 
 export default function Header() {
-  const [school, setSchool] = useState({ name: "New York University" });
+  const [school, setSchool] = useState({ name: "New York University", id:1 });
   const [schoolSearch, setSchoolSearch] = useState(false);
   const [searchType, setSearchType] = useState("professor");
 
