@@ -21,7 +21,8 @@ const ButtonStyle = { minWidth: "150px", backgroundColor: "black", color: "white
 export default function UserDetailsPage() {
   const [editable, setEditable] = useState(false);
   const [values, setValues] = useState({ firstName: "Penghao", lastName: "Weng", year: 2025 });
-  const [school, setSchool] = useState({ name: "New York University" });
+  const [school, setSchool] = useState({ name: "New York University", id: 1 });
+  const schools = JSON.parse(localStorage.getItem("schoolsData"));
   const [form] = Form.useForm();
 
   const handleFirstName = (e) => {
@@ -132,6 +133,7 @@ export default function UserDetailsPage() {
             },
           ]}>
           <SearchBar
+            options={schools}
             school={school}
             style={searchBarStyle}
             hasPrefix={true}

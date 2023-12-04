@@ -16,39 +16,36 @@ export default function SearchBar(props) {
   const setSearchType = props.setSearchType;
   const schoolSearch = props.schoolSearch;
   const setSchoolSearch = props.setSchoolSearch;
-  const current_school = props.current_school
+  const current_school = props.current_school;
+
+  // options for autocompletion
+  const options = props.options;
   const navigate = useNavigate();
-  // Sample options for autocompletion
-  const options = [
-    { name: "Option 1", id: 2 },
-    { name: "Option 2", id: 3 },
-    { name: "Option 3", id: 4 },
-    { name: "Option 4", id: 5 },
-    { name: "Option 5", id: 6 },
-    { name: "Option 6", id: 7 },
-    { name: "Option 7", id: 8 },
-    { name: "Option 8", id: 9 },
-    { name: "Option 9", id: 10 },
-    // Add more options as needed
-  ];
+
+  // map the options by searchType
+  let selectOptions =
+    searchType === "professor"
+      ? options.map((option) => ({ ...option, value: option.firstName + " " + option.lastName }))
+      : options.map((option) => ({ ...option, value: option.name }));
 
   // State to control the input value
   const [inputValue, setInputValue] = useState(props.inputValue || "");
 
   // Callback when an option is selected
-  const handleSelect = (value) => {
-    console.log(value)
+  const handleSelect = (value, option) => {
     if (searchType === "school") {
-      setSchool({ name: value });
+      setSchool({ name: value, id: option.id });
       setSearchType("professor");
+      localStorage.setItem("currentSchool", JSON.stringify({ name: value, id: option.id }));
 
       if (schoolSearch) {
         setSchoolSearch(false);
       }
     } else if (searchType === "professor") {
-      setInputValue(value);
-    } else {
-      setSchool({ name: value });
+      // when select a professor through the options on click, navigate to the prof page
+      navigate("/professor/" + option.id);
+    } else if (searchType === "student") {
+      setSchool({ name: value, id: option.id });
       setInputValue(value);
     }
   };
@@ -81,7 +78,7 @@ export default function SearchBar(props) {
         maxHeight: "auto",
         overflowY: "scroll",
       }}
-      options={options.map((option) => ({ value: option.name, id: option.id }))}
+      options={selectOptions}
       onSelect={handleSelect}
       value={props.school ? props.school.name : inputValue}
       filterOption={(inputValue, option) => option.value.toLowerCase().indexOf(inputValue.toLowerCase()) !== -1}>
