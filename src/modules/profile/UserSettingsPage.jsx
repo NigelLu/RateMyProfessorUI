@@ -53,7 +53,6 @@ export default function UserSettingsPage() {
         msg: "New Password and Confirmed Password Unmatch.",
       });
     } else {
-      console.log("true");
       setErrors({
         status: false,
         msg: "",

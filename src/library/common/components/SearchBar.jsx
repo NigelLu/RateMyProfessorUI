@@ -3,9 +3,9 @@
 import React from "react";
 import { useState } from "react";
 import { Input, AutoComplete } from "antd";
-import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
-import PsychologyAltIcon from "@mui/icons-material/PsychologyAlt";
 import { useNavigate } from "react-router";
+import PersonSearchIcon from "@mui/icons-material/PersonSearch";
+import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
 
 export default function SearchBar(props) {
   const InputStyle = props.style;
@@ -83,11 +83,11 @@ export default function SearchBar(props) {
       value={props.school ? props.school.name : inputValue}
       filterOption={(inputValue, option) => option.value.toLowerCase().indexOf(inputValue.toLowerCase()) !== -1}>
       <Input
-        style={props.disabled ? { backgroundColor: "transparent", border: "none", color: "black" } : InputStyle}
-        placeholder={searchType === "professor" ? "Professor name" : "Your school"}
         onChange={handleInput}
-        prefix={hasPrefix ? searchType === "professor" ? <PsychologyAltIcon /> : <SchoolOutlinedIcon /> : null}
         onPressEnter={handleKeyPress}
+        placeholder={searchType === "professor" ? "Professor name" : "Your school"}
+        prefix={hasPrefix ? searchType === "professor" ? <PersonSearchIcon /> : <SchoolOutlinedIcon /> : null}
+        style={props.disabled ? { backgroundColor: "transparent", border: "none", color: "black" } : InputStyle}
       />
     </AutoComplete>
   );

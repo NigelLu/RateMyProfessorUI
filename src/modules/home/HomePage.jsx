@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { Layout } from "antd";
+import { Layout, Spin } from "antd";
 import UserDropDown from "../../library/common/components/UserDropDown";
 import bigLogo from "../../resources/images/big_RMP_Logo.svg";
 import backgroundImage from "../../resources/images/background.jpg";
@@ -72,21 +72,19 @@ export default function Home() {
 
   // Get school lists
   useEffect(() => {
-      ProfessorServices.getSchools()
-        .then((schoolsData) => {
-          console.log(schoolsData)
-          setSchools(schoolsData);
-          localStorage.setItem("schoolsData", JSON.stringify(schoolsData));
-          if (school === "") {
-            // set default school NYU
-            setSchool(schoolsData[124]);
-            localStorage.setItem("currentSchool", JSON.stringify(schoolsData[124]));
-          }
-        })
-        .catch((error) => {
-          console.log("Error fetching schools, error: ", error);
-        });
-
+    ProfessorServices.getSchools()
+      .then((schoolsData) => {
+        setSchools(schoolsData);
+        localStorage.setItem("schoolsData", JSON.stringify(schoolsData));
+        if (school === "") {
+          // set default school NYU
+          setSchool(schoolsData[124]);
+          localStorage.setItem("currentSchool", JSON.stringify(schoolsData[124]));
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching schools, error: ", error);
+      });
   }, [school]);
 
   // Get professor lists when selected school changes
@@ -98,21 +96,18 @@ export default function Home() {
           localStorage.setItem("professorsData", JSON.stringify(professorsData));
         })
         .catch((error) => {
-          console.log("Error fetching professors, error: ", error);
+          console.error("Error fetching professors, error: ", error);
         });
     }
   }, [school]);
-
-  // console.log(localStorage)
-  // console.log(school)
 
   return (
     <div>
       {schools.length > 0 && school !== "" && professors.length > 0 ? (
         <Layout style={{ backgroundColor: "white" }}>
-          <Header style={{ backgroundColor: "transparent", marginTop: "12px" }}>
+          <Header style={{ backgroundColor: "transparent" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <a href='home'>
+              <a href='home' style={{ marginTop: "3vh" }}>
                 <img src={smallLogo} alt='' style={{ backgroundColor: "black", padding: "5px" }} />
               </a>
 
@@ -160,7 +155,9 @@ export default function Home() {
           </Content>
         </Layout>
       ) : (
-        <p>Loading...</p>
+        <Spin tip='RateMyProfessor is Loading...' size='large' style={{ marginTop: "45vh" }}>
+          <div className='content' />
+        </Spin>
       )}
     </div>
   );

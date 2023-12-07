@@ -4,7 +4,7 @@ import Axios from "axios";
 import { cloneDeep } from "lodash";
 
 const axiosInstance = Axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "http://127.0.0.1:8080",
   headers: {
     "Content-Type": "application/json",
   },
@@ -14,11 +14,11 @@ const axiosInstance = Axios.create({
 axiosInstance.interceptors.request.use(
   function (config) {
     const clonedConfig = cloneDeep(config);
-    const token = "sample-token";
+    // this is a pseudo token and does nothing
+    const token =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
 
-    clonedConfig.headers.common = {
-      Authorization: `Bearer ${token}`,
-    };
+    clonedConfig.headers.Authorization = `Token ${token}`;
     // Do something before request is sent
     return config;
   },

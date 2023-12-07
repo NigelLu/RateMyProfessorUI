@@ -1,12 +1,10 @@
 /** @format */
 
-import axios from "axios";
-
-const rootURL = "http://localhost:8080/";
+import axiosInstance from ".";
 
 const getSchools = () => {
-  return axios
-    .get(rootURL + "school")
+  return axiosInstance
+    .get("school")
     .then((response) => response.data)
     .catch((error) => {
       throw error;
@@ -14,8 +12,8 @@ const getSchools = () => {
 };
 
 const getProfessors = (schoolId) => {
-  return axios
-    .get(rootURL + "professor/list/" + schoolId + "?includeDetails=false")
+  return axiosInstance
+    .get("professor/list/" + schoolId + "?includeDetails=false")
     .then((response) => response.data)
     .catch((error) => {
       throw error;
@@ -23,8 +21,8 @@ const getProfessors = (schoolId) => {
 };
 
 const getProfessorsWithDetials = (schoolId, name) => {
-  return axios
-    .get(rootURL + "professor/list/" + schoolId + "?includeDetails=true&name=" + name)
+  return axiosInstance
+    .get("professor/list/" + schoolId + "?includeDetails=true&name=" + name)
     .then((response) => response.data)
     .catch((error) => {
       throw error;
@@ -34,7 +32,7 @@ const getProfessorsWithDetials = (schoolId, name) => {
 const ProfessorServices = {
   getSchools,
   getProfessors,
-  getProfessorsWithDetials
+  getProfessorsWithDetials,
 };
 
 export default ProfessorServices;

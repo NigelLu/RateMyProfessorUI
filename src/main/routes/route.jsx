@@ -1,18 +1,19 @@
 /** @format */
 
 import React, { lazy } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Home from "../../modules/home/HomePage";
-import ProfessorListPage from "../../modules/professorPages/ProfessorListPage";
-import ProfessorDetailsPage from "../../modules/professorPages/ProfessorDetailsPage";
-import AddProfessorPage from "../../modules/professorPages/AddProfessorPage";
-import UserRatingsPage from "../../modules/profile/UserRatingsPage";
-import UserDetailsPage from "../../modules/profile/UserDetailsPage";
-import UserSavedProfessorsPage from "../../modules/profile/UserSavedProfessorsPage";
-import UserSettingsPage from "../../modules/profile/UserSettingsPage";
+import LoginPage from "../../modules/login/LoginPage";
 import ProfilePage from "../../modules/profile/ProfilePage";
 import EditRatingPage from "../../modules/rating/EditRatingPage";
 import AddRatingPage from "../../modules/rating/AddRatingPage";
+import UserDetailsPage from "../../modules/profile/UserDetailsPage";
+import UserRatingsPage from "../../modules/profile/UserRatingsPage";
+import UserSettingsPage from "../../modules/profile/UserSettingsPage";
+import AddProfessorPage from "../../modules/professorPages/AddProfessorPage";
+import ProfessorListPage from "../../modules/professorPages/ProfessorListPage";
+import ProfessorDetailsPage from "../../modules/professorPages/ProfessorDetailsPage";
+import UserSavedProfessorsPage from "../../modules/profile/UserSavedProfessorsPage";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 const App = lazy(() => import("../../App"));
 
@@ -38,7 +39,7 @@ const routeConfig = function () {
         </Route>
         {/* Rating Pages */}
         <Route path='edit/professor-rating/:studentId/:ratingId' element={<EditRatingPage />}></Route>
-        <Route path='add/professor-rating' element={<AddRatingPage/>}></Route>
+        <Route path='add/professor-rating' element={<AddRatingPage />}></Route>
       </Routes>
     </Router>
   );

@@ -1,7 +1,9 @@
 /** @format */
 
-import React from "react";
-import { Button, Dropdown } from "antd";
+import { Button, Dropdown, Modal } from "antd";
+import LoginPage from "../../../modules/login/LoginPage";
+import React, { useState, useMemo, useCallback } from "react";
+import { REQUIRED_STUDENT_PROPERTY_NAMES } from "../../../modules/login/LoginPage";
 
 // Styles
 const aTagStyle = { fontSize: "15px", fontWeight: "bold" };
@@ -20,62 +22,105 @@ const ButtonStyle = {
   paddingBottom: "10px",
 };
 
-// Items for redirection
-const items = [
-  {
-    key: "1",
-    label: (
-      <a href='/account/profile' style={aTagStyle}>
-        Profile
-      </a>
-    ),
-  },
-  {
-    key: "2",
-    label: (
-      <a href='/account/settings' style={aTagStyle}>
-        Account Settings
-      </a>
-    ),
-  },
-  {
-    key: "3",
-    label: (
-      <a href='/account/ratings' style={aTagStyle}>
-        Your Ratings
-      </a>
-    ),
-  },
-  {
-    key: "4",
-    label: (
-      <a href='/account/saved-professors' style={aTagStyle}>
-        Saved Professors
-      </a>
-    ),
-  },
-  {
-    key: "5",
-    label: (
-      <a href='home' style={aTagStyle}>
-        Logout
-      </a>
-    ),
-  },
-];
-
-
 export default function UserDropDown() {
-  const userName = "Hey, Penghao";
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [studentFirstName, setStudentFirstName] = useState(localStorage.getItem("student-firstName"));
 
+  const [loggedIn, setLoggedIn] = useState(
+    REQUIRED_STUDENT_PROPERTY_NAMES.reduce((prev, cur) => prev && localStorage.getItem(cur), true),
+  );
+
+  const showModal = useCallback(() => {
+    setIsModalOpen(true);
+  }, []);
+  const handleCancel = useCallback(() => {
+    setIsModalOpen(false);
+  }, []);
+  const handleLogout = useCallback(() => {
+    for (let propertyName of REQUIRED_STUDENT_PROPERTY_NAMES) {
+      localStorage.removeItem(propertyName);
+    }
+    setLoggedIn(false);
+  }, []);
+
+  const items = useMemo(
+    () =>
+      // Items for redirection
+      [
+        {
+          key: "1",
+          label: (
+            <a href='/account/profile' style={aTagStyle}>
+              Profile
+            </a>
+          ),
+        },
+        {
+          key: "2",
+          label: (
+            <a href='/account/settings' style={aTagStyle}>
+              Account Settings
+            </a>
+          ),
+        },
+        {
+          key: "3",
+          label: (
+            <a href='/account/ratings' style={aTagStyle}>
+              Your Ratings
+            </a>
+          ),
+        },
+        {
+          key: "4",
+          label: (
+            <a href='/account/saved-professors' style={aTagStyle}>
+              Saved Professors
+            </a>
+          ),
+        },
+        {
+          key: "5",
+          label: (
+            <Button type='text' style={aTagStyle} onClick={handleLogout}>
+              Logout
+            </Button>
+          ),
+        },
+      ],
+    [],
+  );
+
+  const loginPageProps = {
+    setLoggedIn,
+    setIsModalOpen,
+    setStudentFirstName,
+  };
   return (
-    <Dropdown
-      style={DropdownSytle}
-      menu={{
-        items,
-      }}
-      arrow>
-      <Button style={ButtonStyle}>{userName}</Button>
-    </Dropdown>
+    <>
+      <Modal
+        centered
+        title=''
+        footer={null}
+        open={isModalOpen}
+        onCancel={handleCancel}
+        style={{ minHeight: "50vh", width: "30vw" }}>
+        <LoginPage {...loginPageProps} />
+      </Modal>
+      {loggedIn ? (
+        <Dropdown
+          style={DropdownSytle}
+          menu={{
+            items,
+          }}
+          arrow>
+          <Button style={ButtonStyle}>{`Hey ${studentFirstName}`}</Button>
+        </Dropdown>
+      ) : (
+        <Button type='primary' size='large' onClick={showModal} style={{ fontWeight: "bolder" }}>
+          Login
+        </Button>
+      )}
+    </>
   );
 }

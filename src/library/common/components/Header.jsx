@@ -82,7 +82,7 @@ export default function Header() {
           localStorage.setItem("professorsData", JSON.stringify(professorsData));
         })
         .catch((error) => {
-          console.log("Error fetching professors, error: ", error);
+          console.error("Error fetching professors, error: ", error);
         });
     }
   }, [school]);
