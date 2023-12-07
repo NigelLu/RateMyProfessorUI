@@ -36,7 +36,8 @@ export default function UserDropDown() {
   const handleCancel = useCallback(() => {
     setIsModalOpen(false);
   }, []);
-  const handleLogout = useCallback(() => {
+  const handleLogout = useCallback((e) => {
+    e.preventDefault();
     for (let propertyName of REQUIRED_STUDENT_PROPERTY_NAMES) {
       localStorage.removeItem(propertyName);
     }
@@ -50,7 +51,7 @@ export default function UserDropDown() {
         {
           key: "1",
           label: (
-            <a href='/account/profile' style={aTagStyle}>
+            <a href='/account/profile' style={aTagStyle} onClick={(e) => e.preventDefault()}>
               Profile
             </a>
           ),
@@ -58,7 +59,7 @@ export default function UserDropDown() {
         {
           key: "2",
           label: (
-            <a href='/account/settings' style={aTagStyle}>
+            <a href='/account/settings' style={aTagStyle} onClick={(e) => e.preventDefault()}>
               Account Settings
             </a>
           ),
@@ -66,7 +67,7 @@ export default function UserDropDown() {
         {
           key: "3",
           label: (
-            <a href='/account/ratings' style={aTagStyle}>
+            <a href='/account/ratings' style={aTagStyle} onClick={(e) => e.preventDefault()}>
               Your Ratings
             </a>
           ),
@@ -74,7 +75,7 @@ export default function UserDropDown() {
         {
           key: "4",
           label: (
-            <a href='/account/saved-professors' style={aTagStyle}>
+            <a href='/account/saved-professors' style={aTagStyle} onClick={(e) => e.preventDefault()}>
               Saved Professors
             </a>
           ),
@@ -82,13 +83,13 @@ export default function UserDropDown() {
         {
           key: "5",
           label: (
-            <Button type='text' style={aTagStyle} onClick={handleLogout}>
+            <a href='#logout' style={aTagStyle} onClick={handleLogout}>
               Logout
-            </Button>
+            </a>
           ),
         },
       ],
-    [],
+    [handleLogout],
   );
 
   const loginPageProps = {
@@ -104,16 +105,12 @@ export default function UserDropDown() {
         footer={null}
         open={isModalOpen}
         onCancel={handleCancel}
-        style={{ minHeight: "50vh", width: "30vw" }}>
+        style={{ minHeight: "50vh", width: "30vw" }}
+      >
         <LoginPage {...loginPageProps} />
       </Modal>
       {loggedIn ? (
-        <Dropdown
-          style={DropdownSytle}
-          menu={{
-            items,
-          }}
-          arrow>
+        <Dropdown style={DropdownSytle} menu={{ items }} arrow>
           <Button style={ButtonStyle}>{`Hey ${studentFirstName}`}</Button>
         </Dropdown>
       ) : (

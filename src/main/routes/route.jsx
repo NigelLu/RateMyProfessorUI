@@ -2,7 +2,6 @@
 
 import React, { lazy } from "react";
 import Home from "../../modules/home/HomePage";
-import LoginPage from "../../modules/login/LoginPage";
 import ProfilePage from "../../modules/profile/ProfilePage";
 import EditRatingPage from "../../modules/rating/EditRatingPage";
 import AddRatingPage from "../../modules/rating/AddRatingPage";
