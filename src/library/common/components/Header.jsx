@@ -7,7 +7,7 @@ import { Row, Col } from "antd";
 import smallLogo from "../../../resources/images/small_RMP_Logo.svg";
 import ProfSchoolDropDown from "./ProfSchoolDropDown";
 import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
-import PsychologyAltIcon from "@mui/icons-material/PsychologyAlt";
+import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 import SearchBar from "./SearchBar";
 import ProfessorServices from "../../../main/axios/professorServices";
 import { useNavigate } from "react-router";
@@ -55,14 +55,14 @@ export default function Header() {
           {searchType === "professor" ? "Schools" : "Professors"}
         </button>
       ),
-      icon: <>{searchType === "professor" ? <SchoolOutlinedIcon /> : <PsychologyAltIcon />}</>,
+      icon: <>{searchType === "professor" ? <SchoolOutlinedIcon /> : <PersonSearchIcon />}</>,
     },
   ];
 
   const navigateToHome = (e) => {
-    e.preventDefault()
-    navigate("/home")
-  }
+    e.preventDefault();
+    navigate("/home");
+  };
 
   // This function is to handle the onclick event of "at University" button
   // and show the search bar for the schools
@@ -94,7 +94,8 @@ export default function Header() {
           <Col span={2} style={{ paddingTop: "5px", paddingLeft: "15px", minWidth: "120px" }}>
             <button
               style={{ backgroundColor: "transparent", border: "none", cursor: "pointer" }}
-              onClick={navigateToHome}>
+              onClick={navigateToHome}
+            >
               <img src={smallLogo} alt='' />
             </button>
           </Col>
@@ -136,7 +137,8 @@ export default function Header() {
                       fontWeight: "bold",
                       color: "white",
                     }}
-                    onClick={handleSchoolSearch}>
+                    onClick={handleSchoolSearch}
+                  >
                     <span style={{ textDecoration: "underline" }}>{school.name}</span>
                   </button>
                 )}

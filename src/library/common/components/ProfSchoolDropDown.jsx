@@ -3,7 +3,7 @@
 import React from "react";
 import { Button, Dropdown } from "antd";
 import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
-import PsychologyAltIcon from "@mui/icons-material/PsychologyAlt";
+import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 
 // Styles
 
@@ -29,10 +29,11 @@ export default function ProfSchoolDropDown(props) {
       menu={{
         items,
       }}
-      arrow>
+      arrow
+    >
       <Button style={ButtonStyle}>
-        <span style={{ verticalAlign: "middle", }}>
-          {searchType === "professor" ? <PsychologyAltIcon /> : <SchoolOutlinedIcon />}
+        <span style={{ verticalAlign: "middle" }}>
+          {searchType === "professor" ? <PersonSearchIcon /> : <SchoolOutlinedIcon />}
         </span>
         <span style={{ verticalAlign: "middle", marginLeft: "5px", marginBottom: "6px" }}>
           {searchType === "professor" ? "Professors" : "Schools"}

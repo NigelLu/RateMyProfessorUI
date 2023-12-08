@@ -14,6 +14,7 @@ const ButtonStyle = {
   color: "white",
   fontWeight: "bold",
   borderRadius: "20px",
+  borderWidth: "2.5px",
   fontSize: "20px",
   width: "auto",
   height: "auto",
