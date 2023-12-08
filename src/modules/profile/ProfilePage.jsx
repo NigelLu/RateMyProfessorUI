@@ -5,25 +5,45 @@ import { useEffect } from "react";
 import { useNavigate, Outlet } from "react-router";
 import { Tabs } from "antd";
 import SelfHeader from "../../library/common/components/Header";
-import { ProfileOutlined, SettingOutlined, StarOutlined, HeartOutlined } from '@ant-design/icons';
+import { ProfileOutlined, SettingOutlined, StarOutlined, HeartOutlined } from "@ant-design/icons";
 
 // Tab items
 const items = [
   {
     key: "1",
-    label: <span><ProfileOutlined/>Profile</span>,
+    label: (
+      <span>
+        <ProfileOutlined />
+        Profile
+      </span>
+    ),
   },
   {
     key: "2",
-    label: <span><SettingOutlined />Account Settings</span>,
+    label: (
+      <span>
+        <SettingOutlined />
+        Account Settings
+      </span>
+    ),
   },
   {
     key: "3",
-    label: <span><StarOutlined/>Ratings</span>,
+    label: (
+      <span>
+        <StarOutlined />
+        Ratings
+      </span>
+    ),
   },
   {
     key: "4",
-    label: <span><HeartOutlined/>Saved Professors</span>,
+    label: (
+      <span>
+        <HeartOutlined />
+        Saved Professors
+      </span>
+    ),
   },
 ];
 
@@ -46,35 +66,51 @@ const pStyle = {
 export default function ProfilePage() {
   const user = { name: "Penghao" };
   const navigate = useNavigate();
-  const [key, setKey] = useState("1")
+  const [key, setKey] = useState("1");
 
   const handleTabsChange = (key) => {
-    if (key === "1") {
-      navigate("/account/profile");
-    } else if (key === "2") {
-      navigate("/account/settings");
-    } else if (key === "3") {
-      navigate("/account/ratings");
-    } else if (key === "4") {
-      navigate("/account/saved-professors");
+    switch (key) {
+      case "1":
+        navigate("/account/profile");
+        break;
+      case "2":
+        navigate("/account/settings");
+        break;
+      case "3":
+        navigate("/account/ratings");
+        break;
+      case "4":
+        navigate("/account/saved-professors");
+        break;
+      default:
+        navigate("/account/profile");
     }
   };
 
   useEffect(() => {
-    if (window.location.pathname === "/account" || window.location.pathname === "/account/") {
-      navigate("/account/profile");
-    }
-    if (window.location.pathname.includes("profile")) {
-        setKey("1")
-    }
-    else if (window.location.pathname.includes("settings")) {
-        setKey("2")
-    }
-    else if (window.location.pathname.includes("ratings")) {
-        setKey("3")
-    }
-    else if (window.location.pathname.includes("saved-professors")) {
-        setKey("4")
+    switch (window.location.pathname) {
+      case "/account":
+      case "/account/":
+        navigate("/account/profile");
+        break;
+      case "/account/profile":
+      case "/account/profile/":
+        setKey("1");
+        break;
+      case "/account/settings":
+      case "/account/settings/":
+        setKey("2");
+        break;
+      case "/account/ratings":
+      case "/account/ratings/":
+        setKey("3");
+        break;
+      case "/account/saved-professors":
+      case "/account/saved-professors/":
+        setKey("4");
+        break;
+      default:
+        navigate("/account/profile");
     }
   }, [navigate]);
 
@@ -95,7 +131,8 @@ export default function ProfilePage() {
           style={{
             width: "40%",
             minWidth: "400px",
-          }}></Tabs>
+          }}
+        ></Tabs>
 
         {/* content */}
         <Outlet />
