@@ -1,8 +1,9 @@
 /** @format */
 
-import React, { useEffect } from "react";
 import { useState } from "react";
 import { Layout, Spin } from "antd";
+import React, { useEffect } from "react";
+import { useParams } from "react-router";
 import UserDropDown from "../../library/common/components/UserDropDown";
 import bigLogo from "../../resources/images/big_RMP_Logo.svg";
 import backgroundImage from "../../resources/images/background.jpg";
@@ -54,7 +55,10 @@ const coverStyle = {
   alignItems: "center",
 };
 
+export const IS_LOGIN_PARAM = "isLogin";
+
 export default function Home() {
+  const { isLogin } = useParams();
   const [schools, setSchools] = useState([]);
   const [professors, setProfessors] = useState([]);
   const [school, setSchool] = useState(
@@ -111,7 +115,7 @@ export default function Home() {
                 <img src={smallLogo} alt='' style={{ backgroundColor: "black", padding: "5px" }} />
               </a>
 
-              <UserDropDown />
+              <UserDropDown {...{ isLogin: isLogin === IS_LOGIN_PARAM }} />
             </div>
           </Header>
 
@@ -139,11 +143,13 @@ export default function Home() {
                   searchType={searchType}
                   autoCompleteStyle={autoCompleteStyle}
                   setSchool={setSchool}
-                  setSearchType={setSearchType}></SearchBar>
+                  setSearchType={setSearchType}
+                ></SearchBar>
 
                 <button
                   style={{ backgroundColor: "transparent", border: "none", cursor: "pointer" }}
-                  onClick={handleSearchType}>
+                  onClick={handleSearchType}
+                >
                   <h1 style={{ color: "white", marginTop: "15px", fontSize: "16px" }}>
                     {searchType === "professor"
                       ? "I want to find a professor at a different school"

@@ -22,8 +22,10 @@ const ButtonStyle = {
   paddingBottom: "10px",
 };
 
-export default function UserDropDown() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+export default function UserDropDown({ isLogin }) {
+  const [isModalOpen, setIsModalOpen] = useState(
+    isLogin && !REQUIRED_STUDENT_PROPERTY_NAMES.reduce((prev, cur) => prev && localStorage.getItem(cur), true),
+  );
   const [studentFirstName, setStudentFirstName] = useState(localStorage.getItem("student-firstName"));
 
   const [loggedIn, setLoggedIn] = useState(
@@ -51,7 +53,7 @@ export default function UserDropDown() {
         {
           key: "1",
           label: (
-            <a href='/account/profile' style={aTagStyle} onClick={(e) => e.preventDefault()}>
+            <a href='/account/profile' style={aTagStyle}>
               Profile
             </a>
           ),
@@ -59,7 +61,7 @@ export default function UserDropDown() {
         {
           key: "2",
           label: (
-            <a href='/account/settings' style={aTagStyle} onClick={(e) => e.preventDefault()}>
+            <a href='/account/settings' style={aTagStyle}>
               Account Settings
             </a>
           ),
@@ -67,7 +69,7 @@ export default function UserDropDown() {
         {
           key: "3",
           label: (
-            <a href='/account/ratings' style={aTagStyle} onClick={(e) => e.preventDefault()}>
+            <a href='/account/ratings' style={aTagStyle}>
               Your Ratings
             </a>
           ),
@@ -75,7 +77,7 @@ export default function UserDropDown() {
         {
           key: "4",
           label: (
-            <a href='/account/saved-professors' style={aTagStyle} onClick={(e) => e.preventDefault()}>
+            <a href='/account/saved-professors' style={aTagStyle}>
               Saved Professors
             </a>
           ),
@@ -115,7 +117,7 @@ export default function UserDropDown() {
         </Dropdown>
       ) : (
         <Button type='primary' size='large' onClick={showModal} style={{ fontWeight: "bolder" }}>
-          Login
+          Login/Register
         </Button>
       )}
     </>
