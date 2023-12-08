@@ -3,7 +3,7 @@
 import { Button, Dropdown, Modal } from "antd";
 import LoginPage from "../../../modules/login/LoginPage";
 import React, { useState, useMemo, useCallback } from "react";
-import { REQUIRED_STUDENT_PROPERTY_NAMES } from "../../../modules/login/LoginPage";
+import { REQUIRED_STUDENT_PROPERTY_NAMES, isLoggedIn } from "./RequireLoggedIn";
 
 // Styles
 const aTagStyle = { fontSize: "15px", fontWeight: "bold" };
@@ -23,14 +23,9 @@ const ButtonStyle = {
 };
 
 export default function UserDropDown({ isLogin }) {
-  const [isModalOpen, setIsModalOpen] = useState(
-    isLogin && !REQUIRED_STUDENT_PROPERTY_NAMES.reduce((prev, cur) => prev && localStorage.getItem(cur), true),
-  );
+  const [loggedIn, setLoggedIn] = useState(isLoggedIn());
+  const [isModalOpen, setIsModalOpen] = useState(isLogin && !isLoggedIn());
   const [studentFirstName, setStudentFirstName] = useState(localStorage.getItem("student-firstName"));
-
-  const [loggedIn, setLoggedIn] = useState(
-    REQUIRED_STUDENT_PROPERTY_NAMES.reduce((prev, cur) => prev && localStorage.getItem(cur), true),
-  );
 
   const showModal = useCallback(() => {
     setIsModalOpen(true);

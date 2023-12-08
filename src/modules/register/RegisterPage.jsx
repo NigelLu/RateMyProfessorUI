@@ -7,19 +7,10 @@ import { registerStudent } from "../../main/axios/studentServices";
 import ProfessorServices from "../../main/axios/professorServices";
 import { Flex, Form, Input, Button, Layout, AutoComplete } from "antd";
 import React, { useCallback, useEffect, useState, useMemo } from "react";
+import { isLoggedIn } from "../../library/common/components/RequireLoggedIn";
 
 const { useForm } = Form;
 const { Content, Header } = Layout;
-
-export const REQUIRED_STUDENT_PROPERTY_NAMES = [
-  "student-id",
-  "student-email",
-  "student-schoolId",
-  "student-lastName",
-  "student-firstName",
-  "student-ratinglList",
-  "student-savedProfessorList",
-];
 
 export default function RegisterPage() {
   const [form] = useForm();
@@ -59,8 +50,7 @@ export default function RegisterPage() {
 
   // * redirect user to home if user is logged in
   useEffect(() => {
-    if (REQUIRED_STUDENT_PROPERTY_NAMES.reduce((prev, cur) => prev && localStorage.getItem(cur), true))
-      navigate("/home");
+    if (isLoggedIn()) navigate("/home");
   }, [navigate]);
 
   // * fetch schools if schools are not present

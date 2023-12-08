@@ -7,16 +7,6 @@ import { authenticateStudent } from "../../main/axios/studentServices";
 
 const { useForm } = Form;
 
-export const REQUIRED_STUDENT_PROPERTY_NAMES = [
-  "student-id",
-  "student-email",
-  "student-schoolId",
-  "student-lastName",
-  "student-firstName",
-  "student-ratinglList",
-  "student-savedProfessorList",
-];
-
 export default function LoginPage({ setIsModalOpen, setLoggedIn, setStudentFirstName }) {
   const [form] = useForm();
   const navigate = useNavigate();

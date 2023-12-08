@@ -1,10 +1,10 @@
 /** @format */
 
-import React, { useState } from "react";
-import { useEffect } from "react";
-import { useNavigate, Outlet } from "react-router";
 import { Tabs } from "antd";
+import React, { useState, useEffect } from "react";
+import { useNavigate, Outlet } from "react-router";
 import SelfHeader from "../../library/common/components/Header";
+import RequireLoggedIn from "../../library/common/components/RequireLoggedIn";
 import { ProfileOutlined, SettingOutlined, StarOutlined, HeartOutlined } from "@ant-design/icons";
 
 // Tab items
@@ -120,7 +120,8 @@ export default function ProfilePage() {
       <div className='MainContent' style={MainContentStyle}>
         {/* name display */}
         <p style={pStyle}>Hey, {user.name}</p>
-
+        {/* component to check login status and navigate back to login page if not logged in */}
+        <RequireLoggedIn />
         {/* tabs */}
         <Tabs
           activeKey={key}
