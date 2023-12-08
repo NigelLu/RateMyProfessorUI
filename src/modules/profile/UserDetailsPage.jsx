@@ -1,205 +1,218 @@
 /** @format */
 
-import React, { useEffect, useState, useCallback } from "react";
-import { Button, Form, Input } from "antd";
-import SearchBar from "../../library/common/components/SearchBar";
-
-const onFinish = (values) => {
-  console.log("Success:", values);
-};
-
-const onFinishFailed = (errorInfo) => {
-  console.log("Failed:", errorInfo);
-};
-
-const searchBarStyle = { borderRadius: "10px" };
-
-const autoCompleteStyle = { color: "black" };
-
-const ButtonStyle = { minWidth: "150px", backgroundColor: "black", color: "white" };
+import { updateStudent } from "../../main/axios/studentServices";
+import { Button, Form, Input, AutoComplete, Row, Col } from "antd";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
+import { REQUIRED_STUDENT_PROPERTY_NAMES } from "../../library/common/components/RequireLoggedIn";
 
 export default function UserDetailsPage() {
-  const [editable, setEditable] = useState(false);
-  const [values, setValues] = useState({ firstName: "Penghao", lastName: "Weng", year: 2025 });
-  const [school, setSchool] = useState({ name: "New York University", id: 1 });
-  const schools = JSON.parse(localStorage.getItem("schoolsData"));
   const [form] = Form.useForm();
+  const [formValues, setFormValues] = useState(
+    REQUIRED_STUDENT_PROPERTY_NAMES.reduce((prev, propertyName) => {
+      if (localStorage.getItem(propertyName)) prev[propertyName] = localStorage.getItem(propertyName);
+      return prev;
+    }, {}),
+  );
+  const [formEditable, setFormEditable] = useState(false);
+  const schools = JSON.parse(localStorage.getItem("schoolsData"));
 
-  const handleFirstName = (e) => {
-    e.preventDefault();
-    let firstName = e.target.value;
-    setValues({ ...values, firstName: firstName });
-  };
+  // * name->id map, for submission
+  const schoolNameIdMap = useMemo(
+    () =>
+      schools
+        ? schools.reduce((prev, cur) => {
+            if (!prev[cur.name]) {
+              prev[cur.name] = cur.id;
+              return prev;
+            }
+            console.error(`Duplicated school names detected: "${cur.name}"`);
+            return prev;
+          }, {})
+        : {},
+    [schools],
+  );
 
-  const handleLastName = (e) => {
-    e.preventDefault();
-    let lastName = e.target.value;
-    setValues({ ...values, lastName: lastName });
-  };
+  // * id->name map for automatically setting school field label value
+  const schoolIdNameMap = useMemo(
+    () =>
+      schools
+        ? schools.reduce((prev, cur) => {
+            if (!prev[cur.id]) {
+              prev[cur.id] = cur.name;
+              return prev;
+            }
+            console.error(`Duplicated school ids detected: "${cur.id}"`);
+            return prev;
+          }, {})
+        : {},
+    [schools],
+  );
 
-  const handleYear = (e) => {
-    e.preventDefault();
-    let year = e.target.value;
-    setValues({ ...values, year: year });
-  };
+  const onUpdateProfile = useCallback(
+    (values) => {
+      updateStudent({ ...values, schoolId: schoolNameIdMap[values.schoolName] })
+        .then((student) => {
+          if (!student) return;
+          for (let propertyName of Object.getOwnPropertyNames(student))
+            localStorage.setItem(`${propertyName}`, student[propertyName]);
+          setFormEditable(false);
+        })
+        .catch(() => {
+          setFormValues(
+            REQUIRED_STUDENT_PROPERTY_NAMES.reduce((prev, propertyName) => {
+              if (localStorage.getItem(propertyName)) prev[propertyName] = localStorage.getItem(propertyName);
+              return prev;
+            }, {}),
+          );
+        });
+    },
+    [schoolNameIdMap],
+  );
 
-  const handleEditable = (e) => {
-    e.preventDefault();
-    setEditable(true);
-  };
-
-  const handleCancelEdit = useCallback((e) => {
-    e.preventDefault();
-    setEditable(false);
-    // set all input into the original state
-    setSchool({ name: "New York University" });
-    setValues({ firstName: "Penghao", lastName: "Weng", year: 2025 });
-  }, []);
-
+  // * automatically set the school field value
   useEffect(() => {
-    form.setFieldsValue({
-      firstName: values.firstName,
-      lastName: values.lastName,
-      school: school,
-      year: values.year,
-    });
-  }, [form, values, school, handleCancelEdit]);
+    if (
+      (!form.getFieldValue("schoolName") ||
+        form.getFieldValue("schoolName") !== schoolIdNameMap[formValues.schoolId]) &&
+      schoolIdNameMap[formValues.schoolId]
+    )
+      form.setFieldValue("schoolName", schoolIdNameMap[formValues.schoolId]);
+  }, [schoolIdNameMap, formValues, form]);
 
   return (
     <div style={{ width: "40%", minWidth: "400px" }}>
       <Form
         form={form}
-        size='large'
-        name='basic'
-        initialValues={{
-          firstName: values.firstName,
-          lastName: values.lastName,
-          school: school,
-          year: values.year,
-        }}
-        labelCol={{ span: 8 }} // Set label column width
-        wrapperCol={{ span: 16 }} // Set wrapper column width
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete='off'>
-        {/* Form Items */}
+        name='register'
+        autoComplete='off'
+        disabled={!formEditable}
+        labelCol={{ span: 10 }}
+        onFinish={onUpdateProfile}
+        wrapperCol={{ span: 14 }}
+        initialValues={formValues}
+      >
         <Form.Item
-          label={<span style={{ fontSize: "16px" }}>First Name</span>}
+          labelAlign='left'
+          hasFeedback
+          name='email'
+          label='Email'
+          rules={[
+            {
+              required: true,
+              message: "Please input your email!",
+            },
+            {
+              type: "email",
+              message: "Please check if your email is valid",
+            },
+          ]}
+          validateTrigger='onBlur'
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          labelAlign='left'
+          label='First Name'
           name='firstName'
-          labelAlign='left'
           rules={[
             {
-              message: "Please input your First Name!",
+              required: true,
+              message: "Please input your first name!",
             },
-          ]}>
-          <Input
-            onChange={handleFirstName}
-            disabled={!editable}
-            style={{
-              border: editable ? "1px solid #d9d9d9" : "none",
-              backgroundColor: "transparent",
-              color: "black",
-            }}
-          />
+          ]}
+          validateTrigger='onBlur'
+          hasFeedback
+        >
+          <Input />
         </Form.Item>
 
         <Form.Item
-          label={<span style={{ fontSize: "16px" }}>Last Name</span>}
+          labelAlign='left'
+          label='Last Name'
           name='lastName'
-          labelAlign='left'
           rules={[
             {
-              message: "Please input your Last Name!",
+              required: true,
+              message: "Please input your last name!",
             },
-          ]}>
-          <Input
-            onChange={handleLastName}
-            disabled={!editable}
-            style={{
-              border: editable ? "1px solid #d9d9d9" : "none",
-              backgroundColor: "transparent",
-              color: "black",
+          ]}
+          validateTrigger='onBlur'
+          hasFeedback
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          labelAlign='left'
+          label='Expected Year of Graduation'
+          name='expectedYearOfGraduation'
+          rules={[
+            {
+              required: true,
+              message: "Please input your expected year of graduation!",
+            },
+            {
+              validator: (_, value) => {
+                if (Number.isNaN(Number(value))) return Promise.reject("Please input a valid year number");
+                return Number(value) <= 2000 || Number(value) >= 2050
+                  ? Promise.reject("Please input a year after 2000 and before 2050")
+                  : Promise.resolve();
+              },
+            },
+          ]}
+          validateTrigger='onBlur'
+          hasFeedback
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          labelAlign='left'
+          label='School'
+          name='schoolName'
+          rules={[
+            {
+              required: true,
+              message: "Please select a school",
+            },
+            {
+              validator: (_, value) =>
+                value in schoolNameIdMap ? Promise.resolve() : Promise.reject("Please select a valid school option"),
+            },
+          ]}
+          validateTrigger='onBlur'
+          hasFeedback
+        >
+          <AutoComplete
+            dropdownStyle={{
+              maxHeight: "auto",
+              overflowY: "scroll",
             }}
-          />
+            options={schools ? schools.map((option) => ({ value: option.name, label: option.name })) : []}
+            filterOption={(inputValue, option) => option.value.toLowerCase().indexOf(inputValue.toLowerCase()) !== -1}
+          ></AutoComplete>
         </Form.Item>
 
         <Form.Item
-          label={<span style={{ fontSize: "16px" }}>School</span>}
-          name='School'
-          labelAlign='left'
-          rules={[
-            {
-              message: "Please input your School!",
-            },
-          ]}>
-          <SearchBar
-            options={schools}
-            school={school}
-            style={searchBarStyle}
-            hasPrefix={true}
-            searchType={"student"}
-            autoCompleteStyle={autoCompleteStyle}
-            disabled={!editable}
-            setSchool={setSchool}
-          />
-        </Form.Item>
-
-        <Form.Item
-          label={<span style={{ fontSize: "16px" }}>Expected Year of Graduation</span>}
-          name='year'
-          labelAlign='left'
-          rules={[
-            {
-              pattern: /^(200[0-9]|20[1-4][0-9]|2050)$/,
-              message: "Please valid Expected Year of Graduation (2000-2050)!",
-            },
-          ]}>
-          <Input
-            onChange={handleYear}
-            disabled={!editable}
-            style={{
-              border: editable ? "1px solid #d9d9d9" : "none",
-              backgroundColor: "transparent",
-              color: "black",
-            }}
-          />
-        </Form.Item>
-
-        {/* Buttons */}
-        <Form.Item
+          hidden={!formEditable}
           wrapperCol={{
-            span: 24,
-          }}>
-          {editable ? (
-            <div
-              style={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}>
-              <Button style={ButtonStyle}>Save Changes</Button>
-              <Button
-                style={{ minWidth: "150px" }}
-                onClick={(e) => {
-                  handleCancelEdit(e);
-                  form.setFieldsValue({
-                    firstName: values.firstName,
-                    lastName: values.lastName,
-                    school: values.school,
-                    year: values.year,
-                  });
-                }}>
-                Cancel
-              </Button>
-            </div>
-          ) : (
-            <Button style={ButtonStyle} onClick={handleEditable}>
-              Edit
-            </Button>
-          )}
+            offset: 12,
+            span: 12,
+          }}
+        >
+          <Button type='primary' htmlType='submit' style={{ marginTop: "1.5vh" }}>
+            Submit
+          </Button>
         </Form.Item>
       </Form>
+      <Row>
+        <Col offset={12} span={12}>
+          <Button type={formEditable ? "default" : "primary"} onClick={() => setFormEditable(!formEditable)}>
+            {formEditable ? "Cancel" : "Edit"}
+          </Button>
+        </Col>
+      </Row>
     </div>
   );
 }

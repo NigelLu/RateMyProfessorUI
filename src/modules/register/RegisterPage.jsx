@@ -40,8 +40,9 @@ export default function RegisterPage() {
   const onRegister = useCallback(
     (values) => {
       registerStudent({ ...values, schoolId: schoolNameIdMap[values.schoolName] }).then((student) => {
+        if (!student) return;
         for (let propertyName of Object.getOwnPropertyNames(student))
-          localStorage.setItem(`student-${propertyName}`, student[propertyName]);
+          localStorage.setItem(`${propertyName}`, student[propertyName]);
         navigate("/home");
       });
     },

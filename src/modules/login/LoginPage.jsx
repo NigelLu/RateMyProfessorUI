@@ -13,8 +13,9 @@ export default function LoginPage({ setIsModalOpen, setLoggedIn, setStudentFirst
   const onLogin = useCallback(
     (values) => {
       authenticateStudent(values).then((student) => {
+        if (!student) return;
         for (let propertyName of Object.getOwnPropertyNames(student))
-          localStorage.setItem(`student-${propertyName}`, student[propertyName]);
+          localStorage.setItem(`${propertyName}`, student[propertyName]);
         setStudentFirstName(student.firstName);
         setLoggedIn(true);
         setIsModalOpen(false);

@@ -27,7 +27,7 @@ export default function UserDropDown({ isLogin }) {
   const navigate = useNavigate();
   const [loggedIn, setLoggedIn] = useState(isLoggedIn());
   const [isModalOpen, setIsModalOpen] = useState(isLogin && !isLoggedIn());
-  const [studentFirstName, setStudentFirstName] = useState(localStorage.getItem("student-firstName"));
+  const [studentFirstName, setStudentFirstName] = useState(localStorage.getItem("firstName"));
 
   const showModal = useCallback(() => {
     setIsModalOpen(true);
