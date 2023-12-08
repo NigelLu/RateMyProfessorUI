@@ -1,5 +1,6 @@
 /** @format */
 
+import { useNavigate } from "react-router";
 import { Button, Dropdown, Modal } from "antd";
 import LoginPage from "../../../modules/login/LoginPage";
 import React, { useState, useMemo, useCallback } from "react";
@@ -23,6 +24,7 @@ const ButtonStyle = {
 };
 
 export default function UserDropDown({ isLogin }) {
+  const navigate = useNavigate();
   const [loggedIn, setLoggedIn] = useState(isLoggedIn());
   const [isModalOpen, setIsModalOpen] = useState(isLogin && !isLoggedIn());
   const [studentFirstName, setStudentFirstName] = useState(localStorage.getItem("student-firstName"));
@@ -33,13 +35,17 @@ export default function UserDropDown({ isLogin }) {
   const handleCancel = useCallback(() => {
     setIsModalOpen(false);
   }, []);
-  const handleLogout = useCallback((e) => {
-    e.preventDefault();
-    for (let propertyName of REQUIRED_STUDENT_PROPERTY_NAMES) {
-      localStorage.removeItem(propertyName);
-    }
-    setLoggedIn(false);
-  }, []);
+  const handleLogout = useCallback(
+    (e) => {
+      e.preventDefault();
+      for (let propertyName of REQUIRED_STUDENT_PROPERTY_NAMES) {
+        localStorage.removeItem(propertyName);
+      }
+      setLoggedIn(false);
+      navigate("/home");
+    },
+    [navigate],
+  );
 
   const items = useMemo(
     () =>

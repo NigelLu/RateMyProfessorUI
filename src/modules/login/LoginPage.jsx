@@ -44,6 +44,7 @@ export default function LoginPage({ setIsModalOpen, setLoggedIn, setStudentFirst
         >
           <Form.Item
             hasFeedback
+            labelAlign='left'
             name='email'
             label='Email'
             rules={[
@@ -64,6 +65,7 @@ export default function LoginPage({ setIsModalOpen, setLoggedIn, setStudentFirst
           <Form.Item
             label='Password'
             name='password'
+            labelAlign='left'
             rules={[
               {
                 required: true,

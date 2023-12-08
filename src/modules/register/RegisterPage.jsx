@@ -88,6 +88,7 @@ export default function RegisterPage() {
               initialValues={{ remember: true }}
             >
               <Form.Item
+                labelAlign='left'
                 hasFeedback
                 name='email'
                 label='Email'
@@ -107,6 +108,7 @@ export default function RegisterPage() {
               </Form.Item>
 
               <Form.Item
+                labelAlign='left'
                 label='Password'
                 name='password1'
                 rules={[
@@ -122,6 +124,7 @@ export default function RegisterPage() {
               </Form.Item>
 
               <Form.Item
+                labelAlign='left'
                 label='Confirm Password'
                 name='password2'
                 rules={[
@@ -142,6 +145,7 @@ export default function RegisterPage() {
               </Form.Item>
 
               <Form.Item
+                labelAlign='left'
                 label='First Name'
                 name='firstName'
                 rules={[
@@ -157,6 +161,7 @@ export default function RegisterPage() {
               </Form.Item>
 
               <Form.Item
+                labelAlign='left'
                 label='Last Name'
                 name='lastName'
                 rules={[
@@ -172,6 +177,7 @@ export default function RegisterPage() {
               </Form.Item>
 
               <Form.Item
+                labelAlign='left'
                 label='Expected Year of Graduation'
                 name='expectedYearOfGraduation'
                 rules={[
@@ -195,6 +201,7 @@ export default function RegisterPage() {
               </Form.Item>
 
               <Form.Item
+                labelAlign='left'
                 label='School'
                 name='schoolName'
                 rules={[
