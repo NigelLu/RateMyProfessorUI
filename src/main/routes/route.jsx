@@ -8,7 +8,6 @@ import AddRatingPage from "../../modules/rating/AddRatingPage";
 import EditRatingPage from "../../modules/rating/EditRatingPage";
 import UserDetailsPage from "../../modules/profile/UserDetailsPage";
 import UserRatingsPage from "../../modules/profile/UserRatingsPage";
-import UserSettingsPage from "../../modules/profile/UserSettingsPage";
 import AddProfessorPage from "../../modules/professorPages/AddProfessorPage";
 import ProfessorListPage from "../../modules/professorPages/ProfessorListPage";
 import UserSavedProfessorsPage from "../../modules/profile/UserSavedProfessorsPage";
@@ -34,7 +33,7 @@ const routeConfig = function () {
         {/* Account Pages */}
         <Route path='account' element={<ProfilePage />}>
           <Route path='profile' element={<UserDetailsPage />} />
-          <Route path='settings' element={<UserSettingsPage />} />
+          {/* <Route path='settings' element={<UserSettingsPage />} /> */}
           <Route path='ratings' element={<UserRatingsPage />} />
           <Route path='saved-professors' element={<UserSavedProfessorsPage />} />
         </Route>

@@ -56,8 +56,11 @@ export default function UserDetailsPage() {
           for (let propertyName of Object.getOwnPropertyNames(student))
             localStorage.setItem(`${propertyName}`, student[propertyName]);
           setFormEditable(false);
+          // * reload to make sure the header is refreshed
+          window.location.reload();
         })
         .catch(() => {
+          // * if failed to update value, revert form value to previous state
           setFormValues(
             REQUIRED_STUDENT_PROPERTY_NAMES.reduce((prev, propertyName) => {
               if (localStorage.getItem(propertyName)) prev[propertyName] = localStorage.getItem(propertyName);

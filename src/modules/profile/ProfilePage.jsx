@@ -5,7 +5,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, Outlet } from "react-router";
 import SelfHeader from "../../library/common/components/Header";
 import RequireLoggedIn from "../../library/common/components/RequireLoggedIn";
-import { ProfileOutlined, SettingOutlined, StarOutlined, HeartOutlined } from "@ant-design/icons";
+import { ProfileOutlined, StarOutlined, HeartOutlined } from "@ant-design/icons";
 
 // Tab items
 const items = [
@@ -18,15 +18,15 @@ const items = [
       </span>
     ),
   },
-  {
-    key: "2",
-    label: (
-      <span>
-        <SettingOutlined />
-        Account Settings
-      </span>
-    ),
-  },
+  // {
+  //   key: "2",
+  //   label: (
+  //     <span>
+  //       <SettingOutlined />
+  //       Account Settings
+  //     </span>
+  //   ),
+  // },
   {
     key: "3",
     label: (
@@ -58,7 +58,7 @@ const pStyle = {
   width: "40%",
   minWidth: "400px",
   fontSize: "32px",
-  fontWeight: "1000",
+  fontWeight: "900",
   fontFamily: "Poppins, sans-serif",
   marginTop: "100px",
 };
@@ -73,9 +73,9 @@ export default function ProfilePage() {
       case "1":
         navigate("/account/profile");
         break;
-      case "2":
-        navigate("/account/settings");
-        break;
+      // case "2":
+      //   navigate("/account/settings");
+      //   break;
       case "3":
         navigate("/account/ratings");
         break;
@@ -97,10 +97,10 @@ export default function ProfilePage() {
       case "/account/profile/":
         setKey("1");
         break;
-      case "/account/settings":
-      case "/account/settings/":
-        setKey("2");
-        break;
+      // case "/account/settings":
+      // case "/account/settings/":
+      //   setKey("2");
+      //   break;
       case "/account/ratings":
       case "/account/ratings/":
         setKey("3");
