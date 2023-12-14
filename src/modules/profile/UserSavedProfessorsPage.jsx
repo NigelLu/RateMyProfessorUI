@@ -4,7 +4,6 @@ import React from "react";
 import ProfessorCard from "../../library/common/components/ProfessorCard";
 import { List } from "antd";
 
-
 export default function UserSavedProfessorsPage() {
   const Professors = [
     {
@@ -60,7 +59,7 @@ export default function UserSavedProfessorsPage() {
     },
   ];
   return (
-    <div style={{ width: "40%", minWidth: "400px" }}>
+    <div style={{ width: "50%", minWidth: "400px" }}>
       <List
         dataSource={Professors}
         renderItem={(item) => (

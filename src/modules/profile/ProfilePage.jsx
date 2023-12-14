@@ -55,7 +55,7 @@ const MainContentStyle = {
 };
 
 const pStyle = {
-  width: "40%",
+  width: "50%",
   minWidth: "400px",
   fontSize: "32px",
   fontWeight: "900",
@@ -130,7 +130,7 @@ export default function ProfilePage() {
           size='large'
           onChange={handleTabsChange}
           style={{
-            width: "40%",
+            width: "50%",
             minWidth: "400px",
           }}
         ></Tabs>

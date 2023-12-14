@@ -54,3 +54,69 @@ export const updateStudent = ({ email, firstName, lastName, expectedYearOfGradua
       message.error(err.response.data.error, ERROR_DURATION);
     });
 };
+
+// export const getRatings = ({ studentId }) => {
+//   message.info("Fetching your ratings", SUCCESS_DURATION);
+//   return axiosInstance
+//     .get(`student/ratings/${studentId}`)
+//     .then(({ data }) => {
+//       message.success(`Successfully fetched your ratings`, SUCCESS_DURATION);
+//       return data;
+//     })
+//     .catch((err) => {
+//       message.error(err.response.data.error, ERROR_DURATION);
+//     });
+// };
+
+export const submitRating = ({
+  id,
+  grade,
+  review,
+  rating,
+  studentId,
+  takeAgain,
+  difficulty,
+  takenForCredit,
+  attendanceMandatory,
+}) => {
+  return axiosInstance
+    .put("edit/rating", {
+      id,
+      grade,
+      review,
+      rating,
+      takeAgain,
+      studentId,
+      difficulty,
+      takenForCredit,
+      attendanceMandatory,
+    })
+    .then(({ data }) => {
+      let ratings;
+      try {
+        ratings = JSON.parse(localStorage.getItem("ratinglList"));
+      } catch (error) {
+        message.error(
+          "Something went wrong. Please log out and log back in again to see rating changes.",
+          ERROR_DURATION,
+        );
+        localStorage.removeItem("ratinglList");
+        ratings = [];
+      }
+      ratings.forEach((ele) => {
+        if (ele.id === data.id) {
+          ele.grade = data.grade;
+          ele.review = data.review;
+          ele.rating = data.rating;
+          ele.takeAgain = data.takeAgain;
+          ele.difficulty = data.difficulty;
+          ele.takenForCredit = data.takenForCredit;
+          ele.attendanceMandatory = data.attendanceMandatory;
+        }
+      });
+      localStorage.setItem("ratinglList", JSON.stringify(ratings));
+    })
+    .catch((err) => {
+      message.error(err.response.data.error, ERROR_DURATION);
+    });
+};

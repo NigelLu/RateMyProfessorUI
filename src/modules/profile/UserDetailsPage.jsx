@@ -14,7 +14,7 @@ export default function UserDetailsPage() {
     }, {}),
   );
   const [formEditable, setFormEditable] = useState(false);
-  const schools = JSON.parse(localStorage.getItem("schoolsData"));
+  const [schools] = useState(JSON.parse(localStorage.getItem("schoolsData")));
 
   // * name->id map, for submission
   const schoolNameIdMap = useMemo(

@@ -1,56 +1,58 @@
 /** @format */
 
-import React from "react";
+import { List, Modal } from "antd";
+import React, { useCallback, useState } from "react";
 import RatingCard from "../../library/common/components/RatingCard";
-import { List } from "antd";
+import RatingForm from "../../library/common/components/RatingForm";
 
 export default function UserRatingsPage() {
-  const Ratings = [
-    {
-      id: 1,
-      rating: 5.0,
-      difficulty: 2.0,
-      takeAgain: true,
-      takenForCredit: true,
-      attendanceMandatory: true,
-      grade: "A",
-      review: "Good Professor",
-      professorId: 2,
-      studentId: 1,
-      professorFirstName: "Lihua",
-      professorLastName: "Xu",
-      professorSchoolName: "New York University",
-      date: "2023-11-30",
-    },
+  const [modalOpen, setModalOpen] = useState(false);
+  const [ratingBeingEdit, setRatingBeingEdited] = useState({});
+  const [ratings] = useState(
+    JSON.parse(localStorage.getItem("ratinglList") || "[]").map((rating) => {
+      try {
+        const dateTime = new Date(rating.dateTime);
+        rating.date = `${dateTime.getFullYear()}-${dateTime.getMonth()}-${dateTime.getDate()}`;
+      } catch (error) {}
 
-    {
-      id: 2,
-      rating: 3.0,
-      difficulty: 5.0,
-      takeAgain: false,
-      takenForCredit: true,
-      attendanceMandatory: true,
-      grade: "B",
-      review: "Bad Professor",
-      professorId: 1,
-      studentId: 1,
-      professorFirstName: "Yik-Cheung",
-      professorLastName: "Tam",
-      professorSchoolName: "New York University",
-      date: "2023-11-30",
-    },
-  ];
+      return rating;
+    }),
+  );
+
+  const ratingCardCommonProps = {
+    setModalOpen,
+    setRatingBeingEdited,
+  };
+
+  const submitEditedRating = useCallback(() => {
+    console.log(ratingBeingEdit);
+  }, [ratingBeingEdit]);
+
+  const cancelEditRating = useCallback(() => {
+    setModalOpen(false);
+    setRatingBeingEdited({});
+  }, []);
 
   return (
-    <div style={{ width: "40%", minWidth: "400px" }}>
+    <div style={{ width: "50%", minWidth: "400px" }}>
       <List
-        dataSource={Ratings}
+        dataSource={ratings}
         renderItem={(item) => (
           <List.Item>
-            <RatingCard rating={item} />
+            <RatingCard {...{ rating: item, ...ratingCardCommonProps }} />
           </List.Item>
         )}
       />
+      <Modal
+        footer={null}
+        open={modalOpen}
+        title='Edit Rating'
+        onOk={submitEditedRating}
+        onCancel={cancelEditRating}
+        style={{ minWidth: "50vw" }}
+      >
+        <RatingForm rating={ratingBeingEdit} setModalOpen={setModalOpen} />
+      </Modal>
     </div>
   );
 }

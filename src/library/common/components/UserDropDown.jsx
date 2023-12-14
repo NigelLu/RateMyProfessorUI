@@ -60,14 +60,14 @@ export default function UserDropDown({ isLogin }) {
             </a>
           ),
         },
-        {
-          key: "2",
-          label: (
-            <a href='/account/settings' style={aTagStyle}>
-              Account Settings
-            </a>
-          ),
-        },
+        // {
+        //   key: "2",
+        //   label: (
+        //     <a href='/account/settings' style={aTagStyle}>
+        //       Account Settings
+        //     </a>
+        //   ),
+        // },
         {
           key: "3",
           label: (
