@@ -1,11 +1,11 @@
 /** @format */
 
-import React, { useState } from "react";
 import { Card } from "antd";
 import { Col, Row } from "antd";
-import BookmarkIcon from "@mui/icons-material/Bookmark";
+import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router";
-
+import BookmarkIcon from "@mui/icons-material/Bookmark";
+import { saveProfessor, unsaveProfessor } from "../../../main/axios/studentServices";
 
 const divStyle = {
   textAlign: "center",
@@ -25,51 +25,71 @@ const leftStyle = {
   marginTop: "-10px",
 };
 
-export default function ProfessorCard(props) {
+const getRatingColor = ({ averageRating }) =>
+  averageRating > 4 && averageRating <= 5
+    ? "rgb(28,255,7,0.5)"
+    : averageRating > 3 && averageRating <= 4
+    ? "rgb(255,253,7,0.5)"
+    : averageRating > 2 && averageRating <= 3
+    ? "rgb(255,202,7,0.5)"
+    : averageRating > 1 && averageRating <= 2
+    ? "rgb(255,126,7,0.5)"
+    : averageRating >= 0 && averageRating <= 1
+    ? "rgb(255,7,7,0.5)"
+    : "rgb(111,111,111,0.3)";
+
+export default function ProfessorCard({ professor, saved }) {
   const navigate = useNavigate();
-
   const [saveIconColor, setSaveIconColor] = useState("pink");
+  const [isProfessorSaved, setIsProfessorSaved] = useState(saved);
 
-  const professor = props.professor;
-  const ratingDTOList = props.professor.ratingDTOList;
+  const ratingDTOList = useMemo(() => (professor ? professor.ratingDTOList : []), [professor]);
+  // * Calculate corresponding rating values
+  const averageRating = useMemo(
+    () =>
+      ratingDTOList.length
+        ? (ratingDTOList.reduce((sum, rating) => sum + rating.rating, 0) / ratingDTOList.length).toFixed(1)
+        : 0,
+    [ratingDTOList],
+  );
+  const averageDifficulty = useMemo(
+    () =>
+      ratingDTOList.length
+        ? (ratingDTOList.reduce((sum, rating) => sum + rating.difficulty, 0) / ratingDTOList.length).toFixed(1)
+        : 0,
+    [ratingDTOList],
+  );
+  const percentageTakeAgain = useState(
+    () =>
+      ratingDTOList.length
+        ? ((ratingDTOList.filter((rating) => rating.takeAgain).length / ratingDTOList.length) * 100).toFixed(1)
+        : 0,
+    [ratingDTOList],
+  );
 
-  // Calculate corresponding rating values
-  const totalRatings = ratingDTOList.length;
-  const totalRating = ratingDTOList.reduce((sum, rating) => sum + rating.rating, 0);
-  const averageRating = totalRatings ? (totalRating / totalRatings).toFixed(1) : 0;
+  const ratingColor = getRatingColor({ averageRating });
 
-  const totalDifficulty = ratingDTOList.reduce((sum, rating) => sum + rating.difficulty, 0);
-  const averageDifficulty = totalRatings ? (totalDifficulty / totalRatings).toFixed(1) : 0;
-
-  const totalTakeAgain = ratingDTOList.filter((rating) => rating.takeAgain).length;
-  const percentageTakeAgain = totalRatings ? ((totalTakeAgain / totalRatings) * 100).toFixed(1) : 0;
-
-  const ratingColor =
-    averageRating > 4 && averageRating <= 5
-      ? "rgb(28,255,7,0.5)"
-      : averageRating > 3 && averageRating <= 4
-      ? "rgb(255,253,7,0.5)"
-      : averageRating > 2 && averageRating <= 3
-      ? "rgb(255,202,7,0.5)"
-      : averageRating > 1 && averageRating <= 2
-      ? "rgb(255,126,7,0.5)"
-      : averageRating >= 0 && averageRating <= 1
-      ? "rgb(255,7,7,0.5)"
-      : "rgb(111,111,111,0.3)";
-
-  const changeSaveIconColor = (e) => {
-    e.preventDefault();
-    if (saveIconColor === "pink") {
-      setSaveIconColor("rgb(200,200,200)");
-    } else {
-      setSaveIconColor("pink");
-    }
+  const toggleSaveProfessor = () => {
+    if (isProfessorSaved)
+      unsaveProfessor({ studentId: localStorage.getItem("id"), professorId: professor.id }).then(() => {
+        setIsProfessorSaved(!isProfessorSaved);
+      });
+    else
+      saveProfessor({ studentId: localStorage.getItem("id"), professorId: professor.id }).then(() => {
+        setIsProfessorSaved(!isProfessorSaved);
+        window.location.reload();
+      });
   };
 
-  const clickOnCard = (e) => {
-    e.preventDefault();
+  const clickOnCard = () => {
     navigate("/professor/" + professor.id);
   };
+
+  // * change icon color once professorSaved status changes
+  useEffect(() => {
+    if (isProfessorSaved && saveIconColor !== "pink") setSaveIconColor("pink");
+    if (!isProfessorSaved && saveIconColor !== "rgb(200,200,200)") setSaveIconColor("rgb(200,200,200)");
+  }, [isProfessorSaved, saveIconColor]);
 
   return (
     <Card
@@ -81,7 +101,8 @@ export default function ProfessorCard(props) {
         minWidth: "400px",
         fontFamily: "Poppins, sans-serif",
         backgroundColor: "rgb(251, 251, 251)",
-      }}>
+      }}
+    >
       <Row style={{ marginTop: "-10px" }}>
         {/* Professor Rating  */}
         <Col span={6} style={{ fontWeight: "bold" }} onClick={clickOnCard}>
@@ -92,7 +113,7 @@ export default function ProfessorCard(props) {
             <div style={{ ...divStyle, backgroundColor: ratingColor }}>{averageRating}</div>
           </Row>
           <Row style={{ ...leftStyle, marginTop: 0 }}>
-            <p>{totalRatings} ratings</p>
+            <p>{ratingDTOList.length} ratings</p>
           </Row>
         </Col>
 
@@ -105,13 +126,15 @@ export default function ProfessorCard(props) {
               marginTop: "-20px",
               display: "flex",
               justifyContent: "space-between",
-            }}>
+            }}
+          >
             <h3>
               {professor.firstName} {professor.lastName}
             </h3>
             <button
               style={{ backgroundColor: "transparent", border: "none", cursor: "pointer" }}
-              onClick={changeSaveIconColor}>
+              onClick={toggleSaveProfessor}
+            >
               <BookmarkIcon style={{ color: saveIconColor, fontSize: "30px" }} />
             </button>
           </Row>
@@ -124,11 +147,9 @@ export default function ProfessorCard(props) {
             <span>{professor.schoolName}</span>
           </Row>
 
-          {totalRatings === 0 ? (
+          {!ratingDTOList.length ? (
             <Row onClick={clickOnCard}>
-              <p style={{ fontSize: "18px", fontWeight: "bolder" }}>
-                The Professor has no ratings yet!
-              </p>
+              <p style={{ fontSize: "18px", fontWeight: "bolder" }}>The Professor has no ratings yet!</p>
             </Row>
           ) : (
             <Row onClick={clickOnCard}>

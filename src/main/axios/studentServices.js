@@ -68,6 +68,38 @@ export const updateStudent = ({ email, firstName, lastName, expectedYearOfGradua
 //     });
 // };
 
+/**
+ *
+ * @param {Object} data - edited or newly added rating
+ *
+ * update the ratinglList in localStorage
+ */
+const _updateRatinglList = ({ data }) => {
+  let ratings;
+  try {
+    ratings = JSON.parse(localStorage.getItem("ratinglList"));
+  } catch (error) {
+    message.error("Something went wrong. Please log out and log back in again to see rating changes.", ERROR_DURATION);
+    localStorage.removeItem("ratinglList");
+    ratings = [];
+  }
+  let hasMatch = false;
+  ratings.forEach((ele) => {
+    if (ele.id === data.id) {
+      hasMatch = true;
+      ele.grade = data.grade;
+      ele.review = data.review;
+      ele.rating = data.rating;
+      ele.takeAgain = data.takeAgain;
+      ele.difficulty = data.difficulty;
+      ele.takenForCredit = data.takenForCredit;
+      ele.attendanceMandatory = data.attendanceMandatory;
+    }
+  });
+  if (!hasMatch) ratings.push(data);
+  localStorage.setItem("ratinglList", JSON.stringify(ratings));
+};
+
 export const submitRating = ({
   id,
   grade,
@@ -76,46 +108,95 @@ export const submitRating = ({
   studentId,
   takeAgain,
   difficulty,
+  professorId,
   takenForCredit,
   attendanceMandatory,
 }) => {
-  return axiosInstance
-    .put("edit/rating", {
-      id,
-      grade,
-      review,
-      rating,
-      takeAgain,
-      studentId,
-      difficulty,
-      takenForCredit,
-      attendanceMandatory,
-    })
-    .then(({ data }) => {
-      let ratings;
-      try {
-        ratings = JSON.parse(localStorage.getItem("ratinglList"));
-      } catch (error) {
-        message.error(
-          "Something went wrong. Please log out and log back in again to see rating changes.",
-          ERROR_DURATION,
-        );
-        localStorage.removeItem("ratinglList");
-        ratings = [];
-      }
-      ratings.forEach((ele) => {
-        if (ele.id === data.id) {
-          ele.grade = data.grade;
-          ele.review = data.review;
-          ele.rating = data.rating;
-          ele.takeAgain = data.takeAgain;
-          ele.difficulty = data.difficulty;
-          ele.takenForCredit = data.takenForCredit;
-          ele.attendanceMandatory = data.attendanceMandatory;
-        }
+  if (id !== undefined)
+    return axiosInstance
+      .put("edit/rating", {
+        id,
+        grade,
+        review,
+        rating,
+        takeAgain,
+        studentId,
+        difficulty,
+        professorId,
+        takenForCredit,
+        attendanceMandatory,
+      })
+      .then(({ data }) => {
+        _updateRatinglList({ data });
+        return data;
+      })
+      .catch((err) => {
+        message.error(err.response.data.error, ERROR_DURATION);
       });
-      localStorage.setItem("ratinglList", JSON.stringify(ratings));
+  else
+    return axiosInstance
+      .post("rate", {
+        grade,
+        review,
+        rating,
+        takeAgain,
+        studentId,
+        difficulty,
+        professorId,
+        takenForCredit,
+        attendanceMandatory,
+      })
+      .then(({ data }) => {
+        _updateRatinglList({ data });
+        return data;
+      })
+      .catch((err) => {
+        message.error(err.response.data.error, ERROR_DURATION);
+      });
+};
+
+export const saveProfessor = ({ studentId, professorId }) => {
+  return axiosInstance
+    .post("save", { studentId, professorId })
+    .then(({ data }) => {
+      const savedProfessorList = JSON.parse(localStorage.getItem("savedProfessorList"));
+      savedProfessorList.push(data);
+      localStorage.setItem("savedProfessorList", JSON.stringify(savedProfessorList));
+      message.success("Successfully saved the professor", SUCCESS_DURATION);
+      return data;
     })
+    .catch((err) => {
+      message.error(err.response.data.error, ERROR_DURATION);
+    });
+};
+
+export const unsaveProfessor = ({ studentId, professorId }) => {
+  return axiosInstance
+    .delete("save", { data: { studentId, professorId } })
+    .then(({ data }) => {
+      const savedProfessorList = JSON.parse(localStorage.getItem("savedProfessorList"));
+      localStorage.setItem(
+        "savedProfessorList",
+        JSON.stringify(
+          savedProfessorList.filter((ele) => ele.studentId === data.studentId && ele.professorId === data.professorId),
+        ),
+      );
+
+      message.success("Successfully removed the professor", SUCCESS_DURATION);
+      return data;
+    })
+    .catch((err) => {
+      message.error(err.response.data.error, ERROR_DURATION);
+    });
+};
+
+export const getSavedProfessorDetail = ({ savedProfessors }) => {
+  const getDetailsPromises = [];
+  savedProfessors.forEach((savedProfessor) =>
+    getDetailsPromises.push(axiosInstance.get(`professor/${savedProfessor.professorId}`)),
+  );
+  return Promise.all(getDetailsPromises)
+    .then((values) => values.map(({ data }) => data))
     .catch((err) => {
       message.error(err.response.data.error, ERROR_DURATION);
     });

@@ -1,8 +1,7 @@
 /** @format */
 
 import TextArea from "antd/es/input/TextArea";
-import { CheckBox } from "@mui/icons-material";
-import { Flex, Form, Input, Button, Layout, Select } from "antd";
+import { Flex, Form, Input, Button, Layout, Select, Checkbox } from "antd";
 import React, { useCallback, useEffect } from "react";
 import { submitRating } from "../../../main/axios/studentServices";
 
@@ -54,9 +53,12 @@ export default function RatingForm({ rating = {}, setModalOpen }) {
   const [form] = useForm();
 
   const onRating = useCallback(() => {
+    console.log(form.getFieldsValue());
     submitRating({ ...rating, ...form.getFieldsValue() }).then(() => {
-      setModalOpen(false);
-      window.location.reload();
+      if (setModalOpen) {
+        setModalOpen(false);
+        window.location.reload();
+      }
     });
   }, [form, rating, setModalOpen]);
 
@@ -66,11 +68,11 @@ export default function RatingForm({ rating = {}, setModalOpen }) {
       form.setFieldsValue({
         review: rating.review,
         rating: rating.rating,
-        takeAgain: rating.takeAgain,
         difficulty: rating.difficulty,
-        takenForCredit: rating.takenForCredit,
         grade: GRADE_VALUE_MAP[rating.grade],
-        attendanceMandatory: rating.attendanceMandatory,
+        takeAgain: Boolean(rating.takeAgain),
+        takenForCredit: Boolean(rating.takenForCredit),
+        attendanceMandatory: Boolean(rating.attendanceMandatory),
       });
   }, [rating, form]);
 
@@ -81,7 +83,7 @@ export default function RatingForm({ rating = {}, setModalOpen }) {
           <Flex justify='center' align='center'>
             <Form
               form={form}
-              name='editRating'
+              name='rating'
               autoComplete='off'
               onFinish={onRating}
               labelCol={{ span: 10 }}
@@ -141,16 +143,21 @@ export default function RatingForm({ rating = {}, setModalOpen }) {
                 <Input />
               </Form.Item>
 
-              <Form.Item labelAlign='left' label='For credit' name='takenForCredit'>
-                <CheckBox />
+              <Form.Item labelAlign='left' label='For credit' name='takenForCredit' valuePropName='checked'>
+                <Checkbox />
               </Form.Item>
 
-              <Form.Item labelAlign='left' label='Take again' name='takeAgain'>
-                <CheckBox />
+              <Form.Item labelAlign='left' label='Take again' name='takeAgain' valuePropName='checked'>
+                <Checkbox />
               </Form.Item>
 
-              <Form.Item labelAlign='left' label='Attendance mandatory' name='attendanceMandatory'>
-                <CheckBox />
+              <Form.Item
+                labelAlign='left'
+                label='Attendance mandatory'
+                name='attendanceMandatory'
+                valuePropName='checked'
+              >
+                <Checkbox />
               </Form.Item>
 
               <Form.Item

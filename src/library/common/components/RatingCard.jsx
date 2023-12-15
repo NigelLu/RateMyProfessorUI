@@ -70,7 +70,7 @@ const getDifficultyColor = (rating) =>
     ? "rgb(28,255,7,0.5)"
     : "rgb(111,111,111,0.3)";
 
-export default function RatingCard({ rating, setModalOpen, setRatingBeingEdited }) {
+export default function RatingCard({ rating, setModalOpen, setRatingBeingEdited, isMyRating = false }) {
   const ratingColor = getRatingColor(rating);
   const difficultyColor = getDifficultyColor(rating);
 
@@ -78,7 +78,7 @@ export default function RatingCard({ rating, setModalOpen, setRatingBeingEdited 
     <Card
       size='large'
       title={
-        <Row align='middle'>
+        <Row align='middle' justify={"space-between"}>
           <Col span={18}>
             <p style={{ fontSize: "20px" }}>
               <span style={{ fontWeight: "bolder" }}>
@@ -88,18 +88,22 @@ export default function RatingCard({ rating, setModalOpen, setRatingBeingEdited 
               <span>{rating.professorSchoolName}</span>
             </p>
           </Col>
-          <Col span={3} offset={3}>
-            <Button
-              type={"primary"}
-              onClick={() => {
-                setRatingBeingEdited(rating);
-                setModalOpen(true);
-              }}
-              icon={<EditOutlined />}
-            >
-              Edit
-            </Button>
-          </Col>
+          {isMyRating ? (
+            <Col offset={3}>
+              <Button
+                type={"primary"}
+                onClick={() => {
+                  setRatingBeingEdited(rating);
+                  setModalOpen(true);
+                }}
+                icon={<EditOutlined />}
+              >
+                Edit
+              </Button>
+            </Col>
+          ) : (
+            ""
+          )}
         </Row>
       }
       bordered={true}

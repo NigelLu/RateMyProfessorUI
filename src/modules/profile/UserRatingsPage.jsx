@@ -21,12 +21,9 @@ export default function UserRatingsPage() {
 
   const ratingCardCommonProps = {
     setModalOpen,
+    isMyRating: true,
     setRatingBeingEdited,
   };
-
-  const submitEditedRating = useCallback(() => {
-    console.log(ratingBeingEdit);
-  }, [ratingBeingEdit]);
 
   const cancelEditRating = useCallback(() => {
     setModalOpen(false);
@@ -47,7 +44,6 @@ export default function UserRatingsPage() {
         footer={null}
         open={modalOpen}
         title='Edit Rating'
-        onOk={submitEditedRating}
         onCancel={cancelEditRating}
         style={{ minWidth: "50vw" }}
       >
