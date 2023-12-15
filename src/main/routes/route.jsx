@@ -6,7 +6,6 @@ import ProfilePage from "../../modules/profile/ProfilePage";
 import RegisterPage from "../../modules/register/RegisterPage";
 import UserDetailsPage from "../../modules/profile/UserDetailsPage";
 import UserRatingsPage from "../../modules/profile/UserRatingsPage";
-import AddProfessorPage from "../../modules/professorPages/AddProfessorPage";
 import ProfessorListPage from "../../modules/professorPages/ProfessorListPage";
 import UserSavedProfessorsPage from "../../modules/profile/UserSavedProfessorsPage";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
@@ -27,7 +26,6 @@ const routeConfig = function () {
         {/* Professor Pages */}
         <Route path='search/professors/:schoolId/:professorName' element={<ProfessorListPage />} />
         <Route path='professor/:id' element={<ProfessorDetailsPage />} />
-        <Route path='add/professor/' element={<AddProfessorPage />} />
         {/* Account Pages */}
         <Route path='account' element={<ProfilePage />}>
           <Route path='profile' element={<UserDetailsPage />} />
