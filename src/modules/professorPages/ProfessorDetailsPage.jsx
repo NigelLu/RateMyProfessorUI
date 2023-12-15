@@ -127,11 +127,15 @@ export default function ProfessorDetailsPage() {
                 <i>{professor.schoolName}</i>
               </b>
             </Col>
-            <Col>
-              <Button type='primary' onClick={handleAddRating}>
-                Add Rating
-              </Button>
-            </Col>
+            {localStorage.getItem("id") ? (
+              <Col>
+                <Button type='primary' onClick={handleAddRating}>
+                  Add Rating
+                </Button>
+              </Col>
+            ) : (
+              ""
+            )}
           </Row>
           <Row style={{ marginTop: "15px" }}>
             <Col span={2} offset={3}>
