@@ -120,3 +120,50 @@ export const submitRating = ({
       message.error(err.response.data.error, ERROR_DURATION);
     });
 };
+
+export const saveProfessor = ({ studentId, professorId }) => {
+  return axiosInstance
+    .post("save", { studentId, professorId })
+    .then(({ data }) => {
+      const savedProfessorList = JSON.parse(localStorage.getItem("savedProfessorList"));
+      savedProfessorList.push(data);
+      localStorage.setItem("savedProfessorList", JSON.stringify(savedProfessorList));
+      message.success("Successfully saved the professor", SUCCESS_DURATION);
+      return data;
+    })
+    .catch((err) => {
+      message.error(err.response.data.error, ERROR_DURATION);
+    });
+};
+
+export const unsaveProfessor = ({ studentId, professorId }) => {
+  return axiosInstance
+    .delete("save", { data: { studentId, professorId } })
+    .then(({ data }) => {
+      const savedProfessorList = JSON.parse(localStorage.getItem("savedProfessorList"));
+      localStorage.setItem(
+        "savedProfessorList",
+        JSON.stringify(
+          savedProfessorList.filter((ele) => ele.studentId === data.studentId && ele.professorId === data.professorId),
+        ),
+      );
+
+      message.success("Successfully removed the professor", SUCCESS_DURATION);
+      return data;
+    })
+    .catch((err) => {
+      message.error(err.response.data.error, ERROR_DURATION);
+    });
+};
+
+export const getSavedProfessorDetail = ({ savedProfessors }) => {
+  const getDetailsPromises = [];
+  savedProfessors.forEach((savedProfessor) =>
+    getDetailsPromises.push(axiosInstance.get(`professor/${savedProfessor.professorId}`)),
+  );
+  return Promise.all(getDetailsPromises)
+    .then((values) => values.map(({ data }) => data))
+    .catch((err) => {
+      message.error(err.response.data.error, ERROR_DURATION);
+    });
+};
