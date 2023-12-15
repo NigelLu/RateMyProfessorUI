@@ -1,6 +1,7 @@
 /** @format */
 
 import axiosInstance from ".";
+import { message } from "antd";
 
 const getSchools = () => {
   return axiosInstance
@@ -29,9 +30,22 @@ const getProfessorsWithDetials = (schoolId, name) => {
     });
 };
 
+const getProfessorDetail = ({ id }) => {
+  return axiosInstance
+    .get(`professor/${id}`)
+    .then(({ data }) => {
+      message.success("Successfully loaded professor detail");
+      return data;
+    })
+    .catch((err) => {
+      message.error(err.response.data.error);
+    });
+};
+
 const ProfessorServices = {
   getSchools,
   getProfessors,
+  getProfessorDetail,
   getProfessorsWithDetials,
 };
 

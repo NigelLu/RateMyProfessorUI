@@ -2,7 +2,7 @@
 
 import { Card } from "antd";
 import { Col, Row } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import { saveProfessor, unsaveProfessor } from "../../../main/axios/studentServices";
@@ -40,25 +40,31 @@ const getRatingColor = ({ averageRating }) =>
 
 export default function ProfessorCard({ professor, saved }) {
   const navigate = useNavigate();
-  const [ratingDTOList] = useState(professor.ratingDTOList);
   const [saveIconColor, setSaveIconColor] = useState("pink");
   const [isProfessorSaved, setIsProfessorSaved] = useState(saved);
 
+  const ratingDTOList = useMemo(() => (professor ? professor.ratingDTOList : []), [professor]);
   // * Calculate corresponding rating values
-  const [averageRating] = useState(
-    ratingDTOList.length
-      ? (ratingDTOList.reduce((sum, rating) => sum + rating.rating, 0) / ratingDTOList.length).toFixed(1)
-      : 0,
+  const averageRating = useMemo(
+    () =>
+      ratingDTOList.length
+        ? (ratingDTOList.reduce((sum, rating) => sum + rating.rating, 0) / ratingDTOList.length).toFixed(1)
+        : 0,
+    [ratingDTOList],
   );
-  const [averageDifficulty] = useState(
-    ratingDTOList.length
-      ? (ratingDTOList.reduce((sum, rating) => sum + rating.difficulty, 0) / ratingDTOList.length).toFixed(1)
-      : 0,
+  const averageDifficulty = useMemo(
+    () =>
+      ratingDTOList.length
+        ? (ratingDTOList.reduce((sum, rating) => sum + rating.difficulty, 0) / ratingDTOList.length).toFixed(1)
+        : 0,
+    [ratingDTOList],
   );
-  const [percentageTakeAgain] = useState(
-    ratingDTOList.length
-      ? ((ratingDTOList.filter((rating) => rating.takeAgain).length / ratingDTOList.length) * 100).toFixed(1)
-      : 0,
+  const percentageTakeAgain = useState(
+    () =>
+      ratingDTOList.length
+        ? ((ratingDTOList.filter((rating) => rating.takeAgain).length / ratingDTOList.length) * 100).toFixed(1)
+        : 0,
+    [ratingDTOList],
   );
 
   const ratingColor = getRatingColor({ averageRating });

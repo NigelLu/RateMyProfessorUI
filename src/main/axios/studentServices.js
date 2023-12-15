@@ -68,6 +68,38 @@ export const updateStudent = ({ email, firstName, lastName, expectedYearOfGradua
 //     });
 // };
 
+/**
+ *
+ * @param {Object} data - edited or newly added rating
+ *
+ * update the ratinglList in localStorage
+ */
+const _updateRatinglList = ({ data }) => {
+  let ratings;
+  try {
+    ratings = JSON.parse(localStorage.getItem("ratinglList"));
+  } catch (error) {
+    message.error("Something went wrong. Please log out and log back in again to see rating changes.", ERROR_DURATION);
+    localStorage.removeItem("ratinglList");
+    ratings = [];
+  }
+  let hasMatch = false;
+  ratings.forEach((ele) => {
+    if (ele.id === data.id) {
+      hasMatch = true;
+      ele.grade = data.grade;
+      ele.review = data.review;
+      ele.rating = data.rating;
+      ele.takeAgain = data.takeAgain;
+      ele.difficulty = data.difficulty;
+      ele.takenForCredit = data.takenForCredit;
+      ele.attendanceMandatory = data.attendanceMandatory;
+    }
+  });
+  if (!hasMatch) ratings.push(data);
+  localStorage.setItem("ratinglList", JSON.stringify(ratings));
+};
+
 export const submitRating = ({
   id,
   grade,
@@ -76,49 +108,51 @@ export const submitRating = ({
   studentId,
   takeAgain,
   difficulty,
+  professorId,
   takenForCredit,
   attendanceMandatory,
 }) => {
-  return axiosInstance
-    .put("edit/rating", {
-      id,
-      grade,
-      review,
-      rating,
-      takeAgain,
-      studentId,
-      difficulty,
-      takenForCredit,
-      attendanceMandatory,
-    })
-    .then(({ data }) => {
-      let ratings;
-      try {
-        ratings = JSON.parse(localStorage.getItem("ratinglList"));
-      } catch (error) {
-        message.error(
-          "Something went wrong. Please log out and log back in again to see rating changes.",
-          ERROR_DURATION,
-        );
-        localStorage.removeItem("ratinglList");
-        ratings = [];
-      }
-      ratings.forEach((ele) => {
-        if (ele.id === data.id) {
-          ele.grade = data.grade;
-          ele.review = data.review;
-          ele.rating = data.rating;
-          ele.takeAgain = data.takeAgain;
-          ele.difficulty = data.difficulty;
-          ele.takenForCredit = data.takenForCredit;
-          ele.attendanceMandatory = data.attendanceMandatory;
-        }
+  if (id !== undefined)
+    return axiosInstance
+      .put("edit/rating", {
+        id,
+        grade,
+        review,
+        rating,
+        takeAgain,
+        studentId,
+        difficulty,
+        professorId,
+        takenForCredit,
+        attendanceMandatory,
+      })
+      .then(({ data }) => {
+        _updateRatinglList({ data });
+        return data;
+      })
+      .catch((err) => {
+        message.error(err.response.data.error, ERROR_DURATION);
       });
-      localStorage.setItem("ratinglList", JSON.stringify(ratings));
-    })
-    .catch((err) => {
-      message.error(err.response.data.error, ERROR_DURATION);
-    });
+  else
+    return axiosInstance
+      .post("rate", {
+        grade,
+        review,
+        rating,
+        takeAgain,
+        studentId,
+        difficulty,
+        professorId,
+        takenForCredit,
+        attendanceMandatory,
+      })
+      .then(({ data }) => {
+        _updateRatinglList({ data });
+        return data;
+      })
+      .catch((err) => {
+        message.error(err.response.data.error, ERROR_DURATION);
+      });
 };
 
 export const saveProfessor = ({ studentId, professorId }) => {

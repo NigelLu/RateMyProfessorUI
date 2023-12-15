@@ -4,8 +4,6 @@ import React, { lazy } from "react";
 import Home from "../../modules/home/HomePage";
 import ProfilePage from "../../modules/profile/ProfilePage";
 import RegisterPage from "../../modules/register/RegisterPage";
-import AddRatingPage from "../../modules/rating/AddRatingPage";
-import EditRatingPage from "../../modules/rating/EditRatingPage";
 import UserDetailsPage from "../../modules/profile/UserDetailsPage";
 import UserRatingsPage from "../../modules/profile/UserRatingsPage";
 import AddProfessorPage from "../../modules/professorPages/AddProfessorPage";
@@ -37,9 +35,6 @@ const routeConfig = function () {
           <Route path='ratings' element={<UserRatingsPage />} />
           <Route path='saved-professors' element={<UserSavedProfessorsPage />} />
         </Route>
-        {/* Rating Pages */}
-        <Route path='edit/professor-rating/:studentId/:ratingId' element={<EditRatingPage />}></Route>
-        <Route path='add/professor-rating' element={<AddRatingPage />}></Route>
       </Routes>
     </Router>
   );
