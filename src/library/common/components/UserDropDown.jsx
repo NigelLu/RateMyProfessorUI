@@ -118,7 +118,7 @@ export default function UserDropDown({ isLogin }) {
           <Button style={ButtonStyle}>{`Hey ${studentFirstName}`}</Button>
         </Dropdown>
       ) : (
-        <Button type='primary' size='large' onClick={showModal} style={{ fontWeight: "bolder" }}>
+        <Button type='primary' size='large' onClick={showModal} style={{ fontWeight: "bolder", marginTop: "5px" }}>
           Login/Register
         </Button>
       )}
