@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import ProfessorCard from "../../library/common/components/ProfessorCard";
-import { List, Spin } from "antd";
+import { List } from "antd";
 import { getSavedProfessorDetail } from "../../main/axios/studentServices";
 
 export default function UserSavedProfessorsPage() {
@@ -12,7 +12,7 @@ export default function UserSavedProfessorsPage() {
     getSavedProfessorDetail({ savedProfessors }).then((values) => setSavedProfessorsWithDetails(values));
   }, [savedProfessors]);
 
-  return savedProfessorsWithDetails.length ? (
+  return (
     <div style={{ width: "50%", minWidth: "400px" }}>
       <List
         dataSource={savedProfessorsWithDetails}
@@ -23,7 +23,5 @@ export default function UserSavedProfessorsPage() {
         )}
       />
     </div>
-  ) : (
-    <Spin />
   );
 }
