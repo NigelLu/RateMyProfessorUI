@@ -82,10 +82,10 @@ export default function ProfessorListPage() {
           {/* <Button size='large' style={ButtonStyle}>
             Show More
           </Button> */}
-          <span style={{ marginTop: "20px" }}>Don't see the professor you're looking for?</span>
+          {/* <span style={{ marginTop: "20px" }}>Don't see the professor you're looking for?</span>
           <a href='/add/professor/' style={{ color: "black", marginTop: "10px" }}>
             Add a Professor
-          </a>
+          </a> */}
         </div>
       </div>
     </div>
