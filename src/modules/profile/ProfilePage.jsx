@@ -64,7 +64,7 @@ const pStyle = {
 };
 
 export default function ProfilePage() {
-  const user = { name: "Penghao" };
+  const user = { name: localStorage.getItem("firstName") };
   const navigate = useNavigate();
   const [key, setKey] = useState("1");
 
