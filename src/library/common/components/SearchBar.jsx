@@ -37,6 +37,7 @@ export default function SearchBar(props) {
       setSchool({ name: value, id: option.id });
       setSearchType("professor");
       localStorage.setItem("currentSchool", JSON.stringify({ name: value, id: option.id }));
+      setInputValue();
 
       if (schoolSearch) {
         setSchoolSearch(false);
@@ -81,7 +82,8 @@ export default function SearchBar(props) {
       options={selectOptions}
       onSelect={handleSelect}
       value={props.school ? props.school.name : inputValue}
-      filterOption={(inputValue, option) => option.value.toLowerCase().indexOf(inputValue.toLowerCase()) !== -1}>
+      filterOption={(inputValue, option) => option.value.toLowerCase().indexOf(inputValue.toLowerCase()) !== -1}
+    >
       <Input
         onChange={handleInput}
         onPressEnter={handleKeyPress}
