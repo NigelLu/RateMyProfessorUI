@@ -25,7 +25,7 @@ import ProfessorCard from "../../library/common/components/ProfessorCard";
 export default function ProfessorListPage() {
   const { schoolId, professorName } = useParams();
   const [professors, setProfessors] = useState([]);
-  const [school] = useState(JSON.parse(localStorage.getItem("currentSchool")));
+  const school = JSON.parse(localStorage.getItem("currentSchool"));
   const [savedProfessorList] = useState(JSON.parse(localStorage.getItem("savedProfessorList") || "[]"));
 
   const savedProfessorMap = useMemo(
